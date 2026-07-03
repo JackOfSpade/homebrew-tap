@@ -1,22 +1,19 @@
 class Ccblocks < Formula
   desc "Time-shift Claude sessions to match your working hours"
-  homepage "https://github.com/designorant/ccblocks"
-  url "https://github.com/designorant/ccblocks/archive/refs/tags/v1.1.3.tar.gz"
-  sha256 "e67926d9fa9ba12987cf47eddf548f4ad70bc9ef60ad51f2299a8f8a29e17b80"
+  homepage "https://github.com/JackOfSpade/ccblocks"
   license "MIT"
+
+  # No tagged release yet - build straight off this fork's master until a
+  # v* tag exists. Install with: brew install --HEAD jackofspade/tap/ccblocks
+  head "https://github.com/JackOfSpade/ccblocks.git", branch: "master"
 
   depends_on "bash"
   depends_on macos: :catalina
 
   def install
-    # Stage runtime payload in libexec (matches repository layout)
     libexec.install Dir["libexec/*"]
     libexec.install "VERSION"
-
-    # Install documentation at prefix (mirrors GitHub repo layout)
     prefix.install "LICENSE", "README.md", "CONTRIBUTING.md"
-
-    # Create exec wrapper in bin (Homebrew best practice)
     bin.write_exec_script libexec/"ccblocks"
   end
 
@@ -28,7 +25,6 @@ class Ccblocks < Formula
   end
 
   def uninstall
-    # Clean up LaunchAgent/systemd schedulers before Homebrew removes files
     system bin/"ccblocks", "uninstall", "--force"
   end
 
