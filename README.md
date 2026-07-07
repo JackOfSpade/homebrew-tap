@@ -1,4 +1,4 @@
-# Designorant's Homebrew Tap
+# JackOfSpade's Homebrew Tap
 
 Personal Homebrew tap for custom formulae.
 
@@ -7,14 +7,14 @@ Personal Homebrew tap for custom formulae.
 Tap this repository:
 
 ```bash
-brew tap designorant/tap
+brew tap jackofspade/tap
 ```
 
 ## Available Formulae
 
 | Name | Description | Installation |
-|------|-------------|--------------|
-| [ccblocks](https://github.com/designorant/ccblocks) | time-shift Claude sessions to match your working hours | `brew install designorant/tap/ccblocks` |
+| --- | --- | --- |
+| `ccblocks` | time-shift Claude sessions to match your working hours | `brew install jackofspade/tap/ccblocks` |
 
 ## Contributing
 
@@ -22,4 +22,6 @@ Found an issue or want to request a formula? Open an issue in the relevant proje
 
 ## License
 
-[MIT](LICENSE) © [@designorant](https://github.com/designorant)
+MIT © @designorant
+
+This is a fork maintained by @JackOfSpade; see the LICENSE for terms.
