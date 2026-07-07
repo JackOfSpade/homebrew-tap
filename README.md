@@ -14,7 +14,7 @@ brew tap jackofspade/tap
 
 | Name | Description | Installation |
 | --- | --- | --- |
-| `ccblocks` | time-shift Claude sessions to match your working hours | `brew install jackofspade/tap/ccblocks` |
+| [`ccblocks`](https://github.com/JackOfSpade/ccblocks) | time-shift Claude sessions to match your working hours | `brew install jackofspade/tap/ccblocks` |
 
 ## Contributing
 
@@ -22,6 +22,6 @@ Found an issue or want to request a formula? Open an issue in the relevant proje
 
 ## License
 
-MIT © @designorant
+[MIT](LICENSE) © [@designorant](https://github.com/designorant)
 
-This is a fork maintained by @JackOfSpade; see the LICENSE for terms.
+This is a fork maintained by [@JackOfSpade](https://github.com/JackOfSpade); see the [LICENSE](LICENSE) for terms.
