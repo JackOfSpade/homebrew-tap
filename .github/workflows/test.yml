@@ -20,16 +20,25 @@ jobs:
 
       - name: Set up Homebrew
         run: |
-          echo "/opt/homebrew/bin:/usr/local/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/bin:/usr/local/bin" >> "$GITHUB_PATH"
 
       - name: Install, test, and audit all formulae
         run: |
-          brew tap designorant/tap $GITHUB_WORKSPACE
+          # Tap name must match THIS repo (JackOfSpade/homebrew-tap -> jackofspade/tap).
+          # It previously read designorant/tap, copied from another project, so every
+          # formula resolved under a namespace this repo does not own.
+          brew tap jackofspade/tap "$GITHUB_WORKSPACE"
+          # Homebrew refuses to load formulae from a non-official tap until it is
+          # trusted ("Refusing to load formula ... from untrusted tap"), which is what
+          # actually failed this job. The tap here is this very repo's checkout.
+          brew trust jackofspade/tap
           for formula in Formula/*.rb; do
             name=$(basename "$formula" .rb)
             echo "::group::$name"
-            brew install "$name"
-            brew test "$name"
-            brew audit --strict --online "$name"
+            # Fully qualify so the tapped copy is used, never a same-named formula
+            # from homebrew-core.
+            brew install "jackofspade/tap/$name"
+            brew test "jackofspade/tap/$name"
+            brew audit --strict --online "jackofspade/tap/$name"
             echo "::endgroup::"
           done
