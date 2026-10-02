@@ -3,27 +3,47 @@ run-name: Test • ${{ github.event.head_commit.message || github.ref_name }}
 
 on:
   push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: formula-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       matrix:
         os: [macos-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Homebrew
         run: |
+          set -euo pipefail
           echo "/opt/homebrew/bin:/usr/local/bin" >> "$GITHUB_PATH"
+          brew --version
 
       - name: Install, test, and audit all formulae
         run: |
+          set -euo pipefail
+          shopt -s nullglob
+          formulae=(Formula/*.rb)
+          if [ ${#formulae[@]} -eq 0 ]; then
+            echo "::error::No Formula/*.rb files found; there is nothing to validate."
+            exit 1
+          fi
+
           # Tap name must match THIS repo (JackOfSpade/homebrew-tap -> jackofspade/tap).
           # It previously read designorant/tap, copied from another project, so every
           # formula resolved under a namespace this repo does not own.
@@ -32,12 +52,12 @@ jobs:
           # trusted ("Refusing to load formula ... from untrusted tap"), which is what
           # actually failed this job. The tap here is this very repo's checkout.
           brew trust jackofspade/tap
-          for formula in Formula/*.rb; do
+          for formula in "${formulae[@]}"; do
             name=$(basename "$formula" .rb)
             echo "::group::$name"
             # Fully qualify so the tapped copy is used, never a same-named formula
             # from homebrew-core.
-            brew install "jackofspade/tap/$name"
+            brew install --build-from-source "jackofspade/tap/$name"
             brew test "jackofspade/tap/$name"
             brew audit --strict --online "jackofspade/tap/$name"
             echo "::endgroup::"

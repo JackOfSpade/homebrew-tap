@@ -7,7 +7,6 @@ class Ccblocks < Formula
   head "https://github.com/JackOfSpade/ccblocks.git", branch: "main"
 
   depends_on "bash"
-  depends_on macos: :catalina
 
   def install
     libexec.install Dir["libexec/*"]
